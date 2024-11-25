@@ -13,6 +13,6 @@ class PowerSeeder extends Seeder
      */
     public function run(): void
     {
-        
+        Power::factory(1000)->create();
     }
 }
