@@ -10,6 +10,8 @@ class PowerOverview extends BaseWidget
 {
     protected static ?string $pollingInterval = '5s';
 
+    protected static ?int $sort = 1;
+
     protected function getStats(): array
     {
         $powerDayaWIFI = Power::query()

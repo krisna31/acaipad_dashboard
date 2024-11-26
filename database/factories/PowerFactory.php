@@ -20,7 +20,7 @@ class PowerFactory extends Factory
         return [
             "daya" => $this->faker->randomNumber(nbDigits: 3, strict: false),
             "koneksi" => $this->faker->randomDigit() < 5 ? KoneksiEnum::BLE : KoneksiEnum::WIFI,
-            "created_at" => $this->faker->dateTimeBetween("-1 week", "now")->format('d-m-Y H:i:s'),
+            "created_at" => $this->faker->dateTimeBetween('-1 hour', 'now'),
         ];
     }
 }
