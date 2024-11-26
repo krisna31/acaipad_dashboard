@@ -12,7 +12,7 @@ class PowerChart extends ChartWidget
 {
     protected static ?string $heading = 'Last 30 Minutes of Sum Daya';
 
-    protected int|string|array $columnSpan = 6;
+    protected int|string|array $columnSpan = 'full';
 
     protected static ?int $sort = 2;
 

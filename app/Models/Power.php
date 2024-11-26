@@ -20,7 +20,6 @@ class Power extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->created_at = now();
             $model->created_by = auth()->user() ? auth()->user()->name : 'System';
         });
 
