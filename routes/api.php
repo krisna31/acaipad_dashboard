@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Power;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -8,13 +9,13 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::get('/daya', function (Request $request) {
-    $powers = Power::all();
+    $powers = Power::paginate(20);
 
     return response()->json([
         'success' => true,
         'data' => $powers
     ]);
-})->middleware('auth:sanctum');
+});
 
 Route::post('/daya', function (Request $request) {
     $validatedRequest = $request->validate([
