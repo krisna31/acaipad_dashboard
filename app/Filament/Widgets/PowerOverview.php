@@ -25,12 +25,12 @@ class PowerOverview extends BaseWidget
             ->avg('daya') ?? 0;
 
         return [
-            Stat::make('Last 10 Minutes of average daya of Wifi', "$powerDayaWIFI Watt")
+            Stat::make('Last 10 Minutes of average daya of Wireless fidelity', "$powerDayaWIFI Watt")
                 // ->description("$powerLastTenMinutes kode presensi dibuat semimggu terakhir")
                 ->descriptionIcon('heroicon-m-chart-bar-square')
                 ->chart([14, 2, 10, 3, 15, 4, 17])
                 ->color('success'),
-            Stat::make('Last 10 Minutes of average of BLE', "$powerDayaBLE Watt")
+            Stat::make('Last 10 Minutes of average of Bluetooth', "$powerDayaBLE Watt")
                 // ->description("$powerLastTenMinutes kode presensi dibuat semimggu terakhir")
                 ->descriptionIcon('heroicon-m-chart-bar-square')
                 ->chart([7, 2, 10, 3, 15, 4, 17])
