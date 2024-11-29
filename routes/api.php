@@ -9,6 +9,8 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::get('/daya', function (Request $request) {
+    abort_if($request->secret_key != config('app.secret_key'), 404);
+
     $powers = Power::paginate(20);
 
     return response()->json([
@@ -18,9 +20,12 @@ Route::get('/daya', function (Request $request) {
 });
 
 Route::post('/daya', function (Request $request) {
+    abort_if($request->secret_key != config('app.secret_key'), 404);
+
     $validatedRequest = $request->validate([
         'koneksi' => 'required|in:BLE,WIFI',
-        'daya' => 'required|integer'
+        'daya' => 'required|integer',
+        'secret_key' => 'required|string',
     ]);
 
     $power = Power::create($validatedRequest);
