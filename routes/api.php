@@ -8,7 +8,15 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+Route::get('/ping', function(Request $request) {
+    return response()->json([
+        'success' => true, 
+        'message' => 'pong'
+    ]);
+});
+
 Route::get('/daya', function (Request $request) {
+    abort_if(config('app.secret_key') == '' || config('app.secret_key') == null, 501);
     abort_if($request->secret_key != config('app.secret_key'), 404);
 
     $powers = Power::paginate(20);
@@ -20,6 +28,7 @@ Route::get('/daya', function (Request $request) {
 });
 
 Route::post('/daya', function (Request $request) {
+    abort_if(config('app.secret_key') == '' || config('app.secret_key') == null, 501);
     abort_if($request->secret_key != config('app.secret_key'), 404);
 
     $validatedRequest = $request->validate([
