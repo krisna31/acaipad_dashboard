@@ -48,7 +48,7 @@ class PowerResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->badge(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->searchable()
                     ->sortable()
@@ -73,25 +73,25 @@ class PowerResource extends Resource
                     })
                     ->searchable()
                     ->badge(),
-                Tables\Columns\TextColumn::make('created_by')
+                TextColumn::make('created_by')
                     ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_by')
+                TextColumn::make('updated_by')
                     ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
+                TextColumn::make('deleted_at')
                     ->dateTime()
                     ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_by')
+                TextColumn::make('deleted_by')
                     ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

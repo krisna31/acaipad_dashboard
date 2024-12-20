@@ -29,6 +29,8 @@ return [
     'env' => env('APP_ENV', 'production'),
 
     'secret_key' => env('SECRET_KEY', ''),
+    
+    'lokal_send_url' => env('LOKAL_SEND_URL', ''),
 
     /*
     |--------------------------------------------------------------------------

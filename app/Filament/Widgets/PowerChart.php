@@ -42,7 +42,7 @@ class PowerChart extends ChartWidget
     protected function getData(): array
     {
         $activeFilter = $this->filter;
-        $startTime = now()->subMinutes($activeFilter);
+        $startTime = now()->subMinutes(50);
         $endTime = now();
 
         $avgDiffLatencyInternet = Power::selectRaw('*, strftime("%s", created_at) - strftime("%s", sent_at) as diff_latency')
