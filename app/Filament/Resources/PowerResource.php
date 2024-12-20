@@ -13,6 +13,8 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Carbon\Carbon;
+use Carbon\CarbonInterface;
 
 class PowerResource extends Resource
 {
@@ -42,16 +44,6 @@ class PowerResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('diff_readable')
-                    ->label('Time Difference')
-                    ->sortable()
-                    ->searchable()
-                    ->badge(),
-                TextColumn::make("sent_at")
-                    ->dateTime()
-                    ->searchable()
-                    ->sortable()
-                    ->badge(),
                 TextColumn::make("location")
                     ->searchable()
                     ->sortable()
@@ -59,7 +51,28 @@ class PowerResource extends Resource
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->badge(),
+                TextColumn::make("sent_at")
+                    ->dateTime()
+                    ->searchable()
+                    ->sortable()
+                    ->badge(),
+                TextColumn::make('diff_readable')
+                    ->label('Waktu Latensi')
+                    ->state(function(Power $record) {
+                        $createdAt = Carbon::parse($record->created_at);
+                        $sentAt = Carbon::parse($record->sent_at);
+
+                        $diff = $createdAt->diffForHumans($sentAt, CarbonInterface::DIFF_ABSOLUTE, true, 6);
+                        
+                        return $diff;
+                    })
+                    ->sortable(query: function (Builder $query, string $direction): Builder {
+                        return $query->orderByRaw('strftime("%s", created_at) - strftime("%s", sent_at) ' . $direction);
+                    })
+                    ->searchable()
+                    ->badge(),
                 Tables\Columns\TextColumn::make('created_by')
                     ->searchable()
                     ->sortable()
