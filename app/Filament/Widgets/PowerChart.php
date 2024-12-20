@@ -8,6 +8,7 @@ use Flowframe\Trend\TrendValue;
 use App\Models\Power;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class PowerChart extends ChartWidget
 {
@@ -35,45 +36,58 @@ class PowerChart extends ChartWidget
     {
         $activeFilter = $this->filter;
 
-        return "Last $activeFilter Minutes of Sum Wifi x Bluetooth";
+        return "Last $activeFilter Minutes of Average Latency Lokal x Internet";
     }
-
+    
     protected function getData(): array
     {
         $activeFilter = $this->filter;
+        $startTime = now()->subMinutes($activeFilter);
+        $endTime = now();
 
-        $powerWifi = Trend::query(Power::where('koneksi', Power::WIFI))
-            ->between(
-                start: now()->subMinutes(value: $activeFilter),
-                end: now(),
-            )
-            ->perMinute()
-            ->sum('daya');
+        $avgDiffLatencyInternet = Power::selectRaw('*, strftime("%s", created_at) - strftime("%s", sent_at) as diff_latency')
+            ->where('location', Power::INTERNET)
+            ->whereBetween('created_at', [$startTime, $endTime])
+            ->get()
+            ->groupBy(function ($record) {
+                return Carbon::parse($record->created_at)->format('H:i');
+            })
+            ->map(function ($group) {
+                return $group->avg('diff_latency');
+            });
+            
+        $avgDiffLatencyLokal = Power::selectRaw('*, strftime("%s", created_at) - strftime("%s", sent_at) as diff_latency')
+            ->where('location', Power::LOKAL)
+            ->whereBetween('created_at', [$startTime, $endTime])
+            ->get()
+            ->groupBy(function ($record) {
+                return Carbon::parse($record->created_at)->format('H:i');
+            })
+            ->map(function ($group) {
+                return $group->avg('diff_latency');
+            });
 
-        $powerBle = Trend::query(Power::where('koneksi', Power::BLE))
-            ->between(
-                start: now()->subMinutes($activeFilter),
-                end: now(),
-            )
-            ->perMinute()
-            ->sum('daya');
+        $datasets = [
+            [
+                'label' => 'Internet',
+                'data' => $avgDiffLatencyInternet->values(),
+                'borderColor' => '#34eb65',
+            ],
+            [
+                'label' => 'Lokal',
+                'data' => $avgDiffLatencyLokal->values(),
+                'borderColor' => '#3446eb',
+            ],
+        ];
+
+        $labels = $avgDiffLatencyInternet->keys();
 
         return [
-            'datasets' => [
-                [
-                    'label' => 'Daya Wifi',
-                    'data' => $powerWifi->map(fn (TrendValue $value) => $value->aggregate),
-                    'borderColor' => '#34eb65',
-                ],
-                [
-                    'label' => 'Daya Bluetooth',
-                    'data' => $powerBle->map(fn (TrendValue $value) => $value->aggregate),
-                    'borderColor' => '#3446eb',
-                ],
-            ],
-            'labels' => $powerWifi->map(fn (TrendValue $value) => Carbon::parse($value->date)->format("H:i:s")),
+            'datasets' => $datasets,
+            'labels' => $labels,
         ];
     }
+
 
     protected function getType(): string
     {

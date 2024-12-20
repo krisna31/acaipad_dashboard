@@ -20,15 +20,15 @@ class PowerResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-power';
     
-    protected static ?string $navigationGroup = 'Daya';
+    protected static ?string $navigationGroup = 'Latency';
     
-    protected static ?string $modelLabel = 'Daya';
+    protected static ?string $modelLabel = 'Latency';
     
-    protected static ?string $pluralModelLabel = 'Daya';
+    protected static ?string $pluralModelLabel = 'Latency';
     
     protected static ?int $navigationSort = 1;
     
-    protected static ?string $navigationLabel = 'Daya';
+    protected static ?string $navigationLabel = 'Latency';
 
     public static function form(Form $form): Form
     {
@@ -42,11 +42,17 @@ class PowerResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make("daya")
+                TextColumn::make('diff_readable')
+                    ->label('Time Difference')
+                    ->sortable()
+                    ->searchable()
+                    ->badge(),
+                TextColumn::make("sent_at")
+                    ->dateTime()
                     ->searchable()
                     ->sortable()
                     ->badge(),
-                TextColumn::make("koneksi")
+                TextColumn::make("location")
                     ->searchable()
                     ->sortable()
                     ->badge(),

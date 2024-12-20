@@ -18,8 +18,8 @@ class PowerFactory extends Factory
     public function definition(): array
     {
         return [
-            "daya" => $this->faker->randomNumber(nbDigits: 3, strict: false),
-            "koneksi" => $this->faker->randomDigit() < 5 ? KoneksiEnum::BLE : KoneksiEnum::WIFI,
+            "sent_at" => $this->faker->dateTimeBetween('-2 hour', '-1 hour'),
+            "location" => $this->faker->randomDigit() < 5 ? KoneksiEnum::LOKAL : KoneksiEnum::INTERNET,
             "created_at" => $this->faker->dateTimeBetween('-1 hour', 'now'),
         ];
     }

@@ -5,6 +5,7 @@ namespace App\Filament\Widgets;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use App\Models\Power;
+use Illuminate\Support\Facades\DB;
 
 class PowerOverview extends BaseWidget
 {
@@ -14,24 +15,26 @@ class PowerOverview extends BaseWidget
 
     protected function getStats(): array
     {
-        $powerDayaWIFI = Power::query()
+        $avgLatencyTimeINTERNET = Power::query()
             ->whereBetween('created_at', [now()->subMinutes(10), now()])
-            ->where('koneksi', Power::WIFI)
-            ->avg('daya') ?? 0;
+            ->where('location', Power::INTERNET)
+            ->select(DB::raw('AVG(strftime("%s", created_at) - strftime("%s", sent_at)) as avg_diff'))
+            ->value('avg_diff') ?? 0;
 
-        $powerDayaBLE = Power::query()
+        $avgLatencyTimeLokal = Power::query()
             ->whereBetween('created_at', [now()->subMinutes(10), now()])
-            ->where('koneksi', Power::BLE)
-            ->avg('daya') ?? 0;
+            ->where('location', Power::LOKAL)
+            ->select(DB::raw('AVG(strftime("%s", created_at) - strftime("%s", sent_at)) as avg_diff'))
+            ->value('avg_diff') ?? 0;
 
         return [
-            Stat::make('Last 10 Minutes of average daya of Wireless fidelity', "$powerDayaWIFI Watt")
-                // ->description("$powerLastTenMinutes kode presensi dibuat semimggu terakhir")
+            Stat::make('Last 10 Minutes of average Latency With Internet', "$avgLatencyTimeINTERNET Second")
+                // ->description("Test")
                 ->descriptionIcon('heroicon-m-chart-bar-square')
                 ->chart([14, 2, 10, 3, 15, 4, 17])
                 ->color('success'),
-            Stat::make('Last 10 Minutes of average of Bluetooth', "$powerDayaBLE Watt")
-                // ->description("$powerLastTenMinutes kode presensi dibuat semimggu terakhir")
+            Stat::make('Last 10 Minutes of average Latency With Lokal', "$avgLatencyTimeLokal Second")
+                // ->description("Test")
                 ->descriptionIcon('heroicon-m-chart-bar-square')
                 ->chart([7, 2, 10, 3, 15, 4, 17])
                 ->color('info')

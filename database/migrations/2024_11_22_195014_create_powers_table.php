@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('powers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('daya');
-            $table->string('koneksi');
+            $table->string('location');
+            $table->timestamp('sent_at');
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();
             $table->string('deleted_by')->nullable();

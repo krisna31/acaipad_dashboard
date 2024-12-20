@@ -4,16 +4,33 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Power extends Model
 {
     /** @use HasFactory<\Database\Factories\PowerFactory> */
     use HasFactory, \Illuminate\Database\Eloquent\SoftDeletes;
 
-    const BLE = 'BLE';
-    const WIFI = 'WIFI';
+    const LOKAL = 'LOKAL';
+    const INTERNET = 'INTERNET';
 
     protected $guarded = ['id'];
+    
+    public function getTimeDifferenceInSecondsAttribute()
+    {
+        return Carbon::parse($this->sent_at)->diffInSeconds($this->created_at);
+    }
+    
+    public function getDiffReadableAttribute()
+    {
+        $createdAt = Carbon::parse($this->created_at);
+        $sentAt = Carbon::parse($this->sent_at);
+
+        // Get the human-readable difference between created_at and sent_at
+        $diff = $createdAt->diffForHumans($sentAt);
+        
+        return $diff;
+    }
 
     public static function boot()
     {

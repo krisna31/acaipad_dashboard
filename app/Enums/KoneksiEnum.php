@@ -3,6 +3,6 @@
 namespace App\Enums;
 
 Enum KoneksiEnum {
-    case BLE; 
-    case WIFI;
+    case LOKAL; 
+    case INTERNET;
 }
