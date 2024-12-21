@@ -26,7 +26,7 @@ Route::get('/latency', function (Request $request) {
             DB::raw('strftime("%Y-%m-%d %H:%M:%S", created_at) as created_at_human'),
             DB::raw('strftime("%Y-%m-%d %H:%M:%S", updated_at) as updated_at_human'),
             DB::raw('strftime("%Y-%m-%d %H:%M:%S", sent_at) as sent_at_human'),
-            DB::raw('strftime("%s", created_at) - strftime("%s", sent_at) as diff_seconds'),
+            DB::raw('strftime("%f", created_at) - strftime("%f", sent_at) as diff_milliseconds'),
         )
         ->paginate(20);
 
@@ -42,7 +42,7 @@ Route::post('/latency', function (Request $request) {
 
     $validatedRequest = $request->validate([
         'location' => 'required|in:INTERNET,LOKAL',
-        'sent_at' => 'required|date|before:tomorrow|date_format:Y-m-d H:i:s',
+        'sent_at' => 'required|date|before:tomorrow|date_format:Y-m-d H:i:s.u',
         'key_pressed' => 'required|string',
     ]);
 
@@ -101,8 +101,8 @@ Route::post('/latency/lokal', function (Request $request) {
 
     $validatedRequest = $request->validate([
         'location' => 'required|in:INTERNET,LOKAL',
-        'sent_at' => 'required|string',
-        'created_at' => 'required|string',
+        'sent_at' => 'required|string|date_format:Y-m-d H:i:s.u',
+        'created_at' => 'required|string|date_format:Y-m-d H:i:s.u',
         'key_pressed' => 'required|string',
     ]);
 

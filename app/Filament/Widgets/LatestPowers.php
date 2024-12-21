@@ -23,6 +23,10 @@ class LatestPowers extends BaseWidget
                 Power::latest(),
             )
             ->columns([
+                TextColumn::make("key_pressed")
+                    ->searchable()
+                    ->sortable()
+                    ->badge(),
                 TextColumn::make("location")
                     ->searchable()
                     ->sortable()
@@ -43,12 +47,12 @@ class LatestPowers extends BaseWidget
                         $createdAt = Carbon::parse($record->created_at);
                         $sentAt = Carbon::parse($record->sent_at);
 
-                        $diff = $createdAt->diffForHumans($sentAt, CarbonInterface::DIFF_ABSOLUTE, true, 6);
-                        
+                        $diff = $createdAt->diffInMilliseconds($sentAt);
+
                         return $diff;
                     })
                     ->sortable(query: function (Builder $query, string $direction): Builder {
-                        return $query->orderByRaw('strftime("%s", created_at) - strftime("%s", sent_at) ' . $direction);
+                        return $query->orderByRaw('strftime("%f", created_at) - strftime("%f", sent_at) ' . $direction);
                     })
                     ->searchable()
                     ->badge(),

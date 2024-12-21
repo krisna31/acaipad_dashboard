@@ -14,12 +14,14 @@ return new class extends Migration
         Schema::create('powers', function (Blueprint $table) {
             $table->id();
             $table->string('location');
-            $table->timestamp('sent_at');
+            $table->timestamp('sent_at', 3);
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();
             $table->string('deleted_by')->nullable();
             $table->string('key_pressed');
-            $table->timestamps();
+            $table->timestamp('created_at', 3)->useCurrent();
+            $table->timestamp('updated_at', 3)->useCurrent();
+            // $table->timestamps();
             $table->softDeletes();
         });
     }

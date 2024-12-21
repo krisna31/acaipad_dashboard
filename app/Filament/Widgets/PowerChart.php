@@ -38,14 +38,14 @@ class PowerChart extends ChartWidget
 
         return "Last $activeFilter Minutes of Average Latency Lokal x Internet";
     }
-    
+
     protected function getData(): array
     {
         $activeFilter = $this->filter;
         $startTime = now()->subMinutes(50);
         $endTime = now();
 
-        $avgDiffLatencyInternet = Power::selectRaw('*, strftime("%s", created_at) - strftime("%s", sent_at) as diff_latency')
+        $avgDiffLatencyInternet = Power::selectRaw('*, strftime("%f", created_at) - strftime("%f", sent_at) as diff_latency')
             ->where('location', Power::INTERNET)
             ->whereBetween('created_at', [$startTime, $endTime])
             ->get()
@@ -55,8 +55,8 @@ class PowerChart extends ChartWidget
             ->map(function ($group) {
                 return $group->avg('diff_latency');
             });
-            
-        $avgDiffLatencyLokal = Power::selectRaw('*, strftime("%s", created_at) - strftime("%s", sent_at) as diff_latency')
+
+        $avgDiffLatencyLokal = Power::selectRaw('*, strftime("%f", created_at) - strftime("%f", sent_at) as diff_latency')
             ->where('location', Power::LOKAL)
             ->whereBetween('created_at', [$startTime, $endTime])
             ->get()
