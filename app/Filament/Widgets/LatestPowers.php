@@ -42,12 +42,12 @@ class LatestPowers extends BaseWidget
                     ->sortable()
                     ->badge(),
                 TextColumn::make('diff_readable')
-                    ->label('Waktu Latensi')
+                    ->label('Waktu Latensi (Milidetik)')
                     ->state(function(Power $record) {
                         $createdAt = Carbon::parse($record->created_at);
                         $sentAt = Carbon::parse($record->sent_at);
 
-                        $diff = $createdAt->diffInMilliseconds($sentAt);
+                        $diff = $sentAt->diffInMilliseconds($createdAt);
 
                         return $diff;
                     })
