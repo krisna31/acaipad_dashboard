@@ -46,6 +46,8 @@ Route::post('/latency', function (Request $request) {
         'key_pressed' => 'required|string',
     ]);
 
+    $validatedRequest['arrived_at'] = now()->format('Y-m-d H:i:s.v');
+
     $data = "";
     $message = "";
     if ($validatedRequest['location'] == 'INTERNET') {
