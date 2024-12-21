@@ -26,7 +26,9 @@ Route::get('/latency', function (Request $request) {
             DB::raw('strftime("%Y-%m-%d %H:%M:%f", arrived_at) as arrived_at_human'),
             DB::raw('strftime("%Y-%m-%d %H:%M:%f", updated_at) as updated_at_human'),
             DB::raw('strftime("%Y-%m-%d %H:%M:%f", sent_at) as sent_at_human'),
-            DB::raw('strftime("%f", arrived_at) - strftime("%f", sent_at) as diff_milliseconds'),
+            DB::raw('
+                (julianday(arrived_at) - julianday(sent_at)) * 24 * 60 * 60 * 1000 as diff_milliseconds
+            '),
         )
         ->paginate(20);
 

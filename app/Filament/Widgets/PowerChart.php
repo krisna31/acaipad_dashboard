@@ -42,10 +42,10 @@ class PowerChart extends ChartWidget
     protected function getData(): array
     {
         $activeFilter = $this->filter;
-        $startTime = now()->subMinutes(50);
+        $startTime = now()->subMinutes($activeFilter);
         $endTime = now();
 
-        $avgDiffLatencyInternet = Power::selectRaw('*, strftime("%f", arrived_at) - strftime("%f", sent_at) as diff_latency')
+        $avgDiffLatencyInternet = Power::selectRaw('*, (julianday(arrived_at) - julianday(sent_at)) * 24 * 60 * 60 * 1000 as diff_latency')
             ->where('location', Power::INTERNET)
             ->whereBetween('arrived_at', [$startTime, $endTime])
             ->get()
@@ -56,7 +56,7 @@ class PowerChart extends ChartWidget
                 return $group->avg('diff_latency');
             });
 
-        $avgDiffLatencyLokal = Power::selectRaw('*, strftime("%f", arrived_at) - strftime("%f", sent_at) as diff_latency')
+        $avgDiffLatencyLokal = Power::selectRaw('*, (julianday(arrived_at) - julianday(sent_at)) * 24 * 60 * 60 * 1000 as diff_latency')
             ->where('location', Power::LOKAL)
             ->whereBetween('arrived_at', [$startTime, $endTime])
             ->get()

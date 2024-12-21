@@ -65,15 +65,15 @@ class PowerResource extends Resource
                 TextColumn::make('diff_readable')
                     ->label('Waktu Latensi (Milidetik)')
                     ->state(function(Power $record) {
-                        $createdAt = Carbon::parse($record->arrived_at);
+                        $arrivedAt = Carbon::parse($record->arrived_at);
                         $sentAt = Carbon::parse($record->sent_at);
 
-                        $diff = $sentAt->diffInMilliseconds($createdAt);
+                        $diff = $arrivedAt->diffInMilliseconds($sentAt);
 
                         return $diff;
                     })
                     ->sortable(query: function (Builder $query, string $direction): Builder {
-                        return $query->orderByRaw('strftime("%f", arrived_at) - strftime("%f", sent_at) ' . $direction);
+                        return $query->orderByRaw('(julianday(arrived_at) - julianday(sent_at)) * 24 * 60 * 60 * 1000 ' . $direction);
                     })
                     ->searchable()
                     ->badge(),
