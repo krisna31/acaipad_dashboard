@@ -23,9 +23,9 @@ Route::get('/latency', function (Request $request) {
 
     $powers = Power::select(
             '*',
-            DB::raw('strftime("%Y-%m-%d %H:%M:%S", created_at) as created_at_human'),
-            DB::raw('strftime("%Y-%m-%d %H:%M:%S", updated_at) as updated_at_human'),
-            DB::raw('strftime("%Y-%m-%d %H:%M:%S", sent_at) as sent_at_human'),
+            DB::raw('strftime("%Y-%m-%d %H:%M:%S.%f", created_at) as created_at_human'),
+            DB::raw('strftime("%Y-%m-%d %H:%M:%S.%f", updated_at) as updated_at_human'),
+            DB::raw('strftime("%Y-%m-%d %H:%M:%S.%f", sent_at) as sent_at_human'),
             DB::raw('strftime("%f", created_at) - strftime("%f", sent_at) as diff_milliseconds'),
         )
         ->paginate(20);
@@ -42,7 +42,7 @@ Route::post('/latency', function (Request $request) {
 
     $validatedRequest = $request->validate([
         'location' => 'required|in:INTERNET,LOKAL',
-        'sent_at' => 'required|date|before:tomorrow|date_format:Y-m-d H:i:s.u',
+        'sent_at' => 'required|date|before:tomorrow|date_format:Y-m-d H:i:s.v',
         'key_pressed' => 'required|string',
     ]);
 
@@ -56,7 +56,7 @@ Route::post('/latency', function (Request $request) {
             'secret_key' => config('app.secret_key'),
             'sent_at' => $validatedRequest['sent_at'],
             'location' => $validatedRequest['location'],
-            'created_at' => now()->format('Y-m-d H:i:s'),
+            'created_at' => now()->format('Y-m-d H:i:s.v'),
             'key_pressed' => $validatedRequest['key_pressed'],
         ];
 
@@ -101,8 +101,8 @@ Route::post('/latency/lokal', function (Request $request) {
 
     $validatedRequest = $request->validate([
         'location' => 'required|in:INTERNET,LOKAL',
-        'sent_at' => 'required|string|date_format:Y-m-d H:i:s.u',
-        'created_at' => 'required|string|date_format:Y-m-d H:i:s.u',
+        'sent_at' => 'required|string|date_format:Y-m-d H:i:s.v',
+        'created_at' => 'required|string|date_format:Y-m-d H:i:s.v',
         'key_pressed' => 'required|string',
     ]);
 
