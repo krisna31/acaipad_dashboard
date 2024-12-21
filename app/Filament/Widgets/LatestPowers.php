@@ -8,6 +8,7 @@ use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use App\Models\Power;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Carbon\CarbonInterface;
 
 class LatestPowers extends BaseWidget
