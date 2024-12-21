@@ -23,9 +23,9 @@ Route::get('/latency', function (Request $request) {
 
     $powers = Power::select(
             '*',
-            DB::raw('strftime("%Y-%m-%d %H:%M:%S.%f", created_at) as created_at_human'),
-            DB::raw('strftime("%Y-%m-%d %H:%M:%S.%f", updated_at) as updated_at_human'),
-            DB::raw('strftime("%Y-%m-%d %H:%M:%S.%f", sent_at) as sent_at_human'),
+            DB::raw('strftime("%Y-%m-%d %H:%M:%f", created_at) as created_at_human'),
+            DB::raw('strftime("%Y-%m-%d %H:%M:%f", updated_at) as updated_at_human'),
+            DB::raw('strftime("%Y-%m-%d %H:%M:%f", sent_at) as sent_at_human'),
             DB::raw('strftime("%f", created_at) - strftime("%f", sent_at) as diff_milliseconds'),
         )
         ->paginate(20);
