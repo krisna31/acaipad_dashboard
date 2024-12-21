@@ -31,7 +31,7 @@ class LatestPowers extends BaseWidget
                     ->searchable()
                     ->sortable()
                     ->badge(),
-                TextColumn::make('created_at')
+                TextColumn::make('arrived_at')
                     ->dateTime()
                     ->searchable()
                     ->sortable()
@@ -44,7 +44,7 @@ class LatestPowers extends BaseWidget
                 TextColumn::make('diff_readable')
                     ->label('Waktu Latensi (Milidetik)')
                     ->state(function(Power $record) {
-                        $createdAt = Carbon::parse($record->created_at);
+                        $createdAt = Carbon::parse($record->arrived_at);
                         $sentAt = Carbon::parse($record->sent_at);
 
                         $diff = $sentAt->diffInMilliseconds($createdAt);
@@ -52,10 +52,15 @@ class LatestPowers extends BaseWidget
                         return $diff;
                     })
                     ->sortable(query: function (Builder $query, string $direction): Builder {
-                        return $query->orderByRaw('strftime("%f", created_at) - strftime("%f", sent_at) ' . $direction);
+                        return $query->orderByRaw('strftime("%f", arrived_at) - strftime("%f", sent_at) ' . $direction);
                     })
                     ->searchable()
                     ->badge(),
+                TextColumn::make('created_at')
+                    ->dateTime()
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_by')
                     ->searchable()
                     ->sortable()

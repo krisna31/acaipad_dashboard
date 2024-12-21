@@ -45,23 +45,23 @@ class PowerChart extends ChartWidget
         $startTime = now()->subMinutes(50);
         $endTime = now();
 
-        $avgDiffLatencyInternet = Power::selectRaw('*, strftime("%f", created_at) - strftime("%f", sent_at) as diff_latency')
+        $avgDiffLatencyInternet = Power::selectRaw('*, strftime("%f", arrived_at) - strftime("%f", sent_at) as diff_latency')
             ->where('location', Power::INTERNET)
-            ->whereBetween('created_at', [$startTime, $endTime])
+            ->whereBetween('arrived_at', [$startTime, $endTime])
             ->get()
             ->groupBy(function ($record) {
-                return Carbon::parse($record->created_at)->format('H:i');
+                return Carbon::parse($record->arrived_at)->format('H:i');
             })
             ->map(function ($group) {
                 return $group->avg('diff_latency');
             });
 
-        $avgDiffLatencyLokal = Power::selectRaw('*, strftime("%f", created_at) - strftime("%f", sent_at) as diff_latency')
+        $avgDiffLatencyLokal = Power::selectRaw('*, strftime("%f", arrived_at) - strftime("%f", sent_at) as diff_latency')
             ->where('location', Power::LOKAL)
-            ->whereBetween('created_at', [$startTime, $endTime])
+            ->whereBetween('arrived_at', [$startTime, $endTime])
             ->get()
             ->groupBy(function ($record) {
-                return Carbon::parse($record->created_at)->format('H:i');
+                return Carbon::parse($record->arrived_at)->format('H:i');
             })
             ->map(function ($group) {
                 return $group->avg('diff_latency');

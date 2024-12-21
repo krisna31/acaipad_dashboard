@@ -20,7 +20,7 @@ class PowerFactory extends Factory
         return [
             "sent_at" => $this->faker->dateTimeBetween('-2 hour', '-1 hour')->format('Y-m-d H:i:s.u'),
             "location" => $this->faker->randomDigit() < 5 ? KoneksiEnum::LOKAL : KoneksiEnum::INTERNET,
-            "created_at" => $this->faker->dateTimeBetween('-1 hour', 'now')->format('Y-m-d H:i:s.u'),
+            "arrived_at" => $this->faker->dateTimeBetween('-1 hour', 'now')->format('Y-m-d H:i:s.u'),
             "key_pressed" => $this->faker->randomElement(['A', 'B', 'C', 'D']),
         ];
     }

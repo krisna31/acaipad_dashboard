@@ -16,15 +16,15 @@ class PowerOverview extends BaseWidget
     protected function getStats(): array
     {
         $avgLatencyTimeINTERNET = Power::query()
-            ->whereBetween('created_at', [now()->subMinutes(10), now()])
+            ->whereBetween('arrived_at', [now()->subMinutes(10), now()])
             ->where('location', Power::INTERNET)
-            ->select(DB::raw('AVG(strftime("%f", created_at) - strftime("%f", sent_at)) as avg_diff'))
+            ->select(DB::raw('AVG(strftime("%f", arrived_at) - strftime("%f", sent_at)) as avg_diff'))
             ->value('avg_diff') ?? 0;
 
         $avgLatencyTimeLokal = Power::query()
-            ->whereBetween('created_at', [now()->subMinutes(10), now()])
+            ->whereBetween('arrived_at', [now()->subMinutes(10), now()])
             ->where('location', Power::LOKAL)
-            ->select(DB::raw('AVG(strftime("%f", created_at) - strftime("%f", sent_at)) as avg_diff'))
+            ->select(DB::raw('AVG(strftime("%f", arrived_at) - strftime("%f", sent_at)) as avg_diff'))
             ->value('avg_diff') ?? 0;
 
         return [

@@ -20,11 +20,6 @@ class Power extends Model
     {
         parent::boot();
 
-        static::creating(function ($model) {
-            $model->created_at = request()->created_at ?? now()->format('Y-m-d H:i:s.v');
-            // $model->created_by = auth()->user()->name;
-        });
-
         static::updating(function ($model) {
             $model->updated_at = now()->format('Y-m-d H:i:s.v');
             $model->updated_by = auth()->user()->name;

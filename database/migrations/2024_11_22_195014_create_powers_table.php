@@ -19,9 +19,8 @@ return new class extends Migration
             $table->string('updated_by')->nullable();
             $table->string('deleted_by')->nullable();
             $table->string('key_pressed');
-            $table->timestamp('created_at', 3);
-            $table->timestamp('updated_at', 3);
-            // $table->timestamps();
+            $table->timestamp('arrived_at', 3);
+            $table->timestamps();
             $table->softDeletes();
         });
     }
