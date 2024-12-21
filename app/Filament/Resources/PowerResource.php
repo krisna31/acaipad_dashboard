@@ -21,15 +21,15 @@ class PowerResource extends Resource
     protected static ?string $model = Power::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-power';
-    
+
     protected static ?string $navigationGroup = 'Latency';
-    
+
     protected static ?string $modelLabel = 'Latency';
-    
+
     protected static ?string $pluralModelLabel = 'Latency';
-    
+
     protected static ?int $navigationSort = 1;
-    
+
     protected static ?string $navigationLabel = 'Latency';
 
     public static function form(Form $form): Form
@@ -44,6 +44,10 @@ class PowerResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make("key_pressed")
+                    ->searchable()
+                    ->sortable()
+                    ->badge(),
                 TextColumn::make("location")
                     ->searchable()
                     ->sortable()
@@ -65,7 +69,7 @@ class PowerResource extends Resource
                         $sentAt = Carbon::parse($record->sent_at);
 
                         $diff = $createdAt->diffForHumans($sentAt, CarbonInterface::DIFF_ABSOLUTE, true, 6);
-                        
+
                         return $diff;
                     })
                     ->sortable(query: function (Builder $query, string $direction): Builder {
@@ -125,7 +129,7 @@ class PowerResource extends Resource
             // 'edit' => Pages\EditPower::route('/{record}/edit'),
         ];
     }
-    
+
     public static function getNavigationBadge(): ?string {
         return static::getModel()::count();
     }

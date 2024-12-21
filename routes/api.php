@@ -12,7 +12,7 @@ Route::get('/user', function (Request $request) {
 
 Route::get('/ping', function(Request $request) {
     return response()->json([
-        'success' => true, 
+        'success' => true,
         'message' => 'pong'
     ]);
 });
@@ -43,8 +43,9 @@ Route::post('/latency', function (Request $request) {
     $validatedRequest = $request->validate([
         'location' => 'required|in:INTERNET,LOKAL',
         'sent_at' => 'required|date|before:tomorrow|date_format:Y-m-d H:i:s',
+        'key_pressed' => 'required|string',
     ]);
-    
+
     $data = "";
     $message = "";
     if ($validatedRequest['location'] == 'INTERNET') {
@@ -56,13 +57,14 @@ Route::post('/latency', function (Request $request) {
             'sent_at' => $validatedRequest['sent_at'],
             'location' => $validatedRequest['location'],
             'created_at' => now()->format('Y-m-d H:i:s'),
+            'key_pressed' => $validatedRequest['key_pressed'],
         ];
-    
+
         try {
             $response = Http::withHeaders([
                 'Accept' => 'application/json',
             ])->post(config('app.lokal_send_url'), $data);
-    
+
             if ($response->successful()) {
                 Log::info('Successfully received response from external API', [
                     'response' => $response->json(),
@@ -75,7 +77,7 @@ Route::post('/latency', function (Request $request) {
                 ]);
                 $message = "Power record failed to created (Lokal Hit API) " . json_encode($response->body());
             }
-            
+
         } catch(\Throwable $e) {
             Log::error('Failed to get a successful response from the API', [
                 'status' => $e,
@@ -101,8 +103,9 @@ Route::post('/latency/lokal', function (Request $request) {
         'location' => 'required|in:INTERNET,LOKAL',
         'sent_at' => 'required|string',
         'created_at' => 'required|string',
+        'key_pressed' => 'required|string',
     ]);
-    
+
     if ($validatedRequest['location'] == 'INTERNET') {
         abort(403, "No Internet Allowed");
     } else {
