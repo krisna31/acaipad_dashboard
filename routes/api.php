@@ -2,6 +2,7 @@
 
 use App\Models\Power;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -52,6 +53,7 @@ Route::post('/latency', function (Request $request) {
 
     $data = "";
     $message = "";
+    $statusCode = 201;
     if ($validatedRequest['location'] == 'INTERNET') {
         $data = Power::create($validatedRequest);
         $message = "Power record created successfully (Internet)";
@@ -80,6 +82,7 @@ Route::post('/latency', function (Request $request) {
                     'error' => $response->body(),
                 ]);
                 $message = "Power record failed to created (Lokal Hit API) " . json_encode($response->body());
+                $statusCode = 500;
             }
 
         } catch(\Throwable $e) {
@@ -88,6 +91,7 @@ Route::post('/latency', function (Request $request) {
             ]);
             $message = "Power record failed to created (Lokal Hit API) " . json_encode($e);
             $success = false;
+            $statusCode = 500;
         }
         $data = null;
     }
@@ -96,7 +100,7 @@ Route::post('/latency', function (Request $request) {
         'success' => $success ?? true,
         'message' => $message,
         'data' => $data
-    ], 201);
+    ], $statusCode);
 });
 
 Route::post('/latency/lokal', function (Request $request) {
