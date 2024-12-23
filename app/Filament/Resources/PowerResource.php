@@ -70,10 +70,10 @@ class PowerResource extends Resource
 
                         $diff = $arrivedAt->diffInMilliseconds($sentAt);
 
-                        return $diff;
+                        return abs($diff);
                     })
                     ->sortable(query: function (Builder $query, string $direction): Builder {
-                        return $query->orderByRaw('(julianday(arrived_at) - julianday(sent_at)) * 24 * 60 * 60 * 1000 ' . $direction);
+                        return $query->orderByRaw('ABS((julianday(arrived_at) - julianday(sent_at)) * 24 * 60 * 60 * 1000) ' . $direction);
                     })
                     ->searchable()
                     ->badge(),
